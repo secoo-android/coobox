@@ -1,5 +1,7 @@
 Coobox
 ===========
+[![Release](https://jitpack.io/v/secoo-android/coobox.svg)](https://jitpack.io/#secoo-android/coobox)
+
 
   * Coobox 是一个加速 Android 应用开发编码效率的工具箱
   * 名字来源: Secoo + Box Coo取自Secoo，Box则有两层意思，其一是工具箱，其二则是寺库 Logo 礼物盒子
