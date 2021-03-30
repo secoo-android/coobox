@@ -79,6 +79,11 @@ aView.simulateClick()
 aView.removeSelf()
 ```
 
+完整文档
+=======
+[API 具体文档](https://secoo-android.github.io/coobox/library/)
+
+
 License
 =======
 
