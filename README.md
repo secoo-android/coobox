@@ -1,6 +1,9 @@
 Coobox
 ===========
-[![Release](https://jitpack.io/v/secoo-android/coobox.svg)](https://jitpack.io/#secoo-android/coobox)
+[![Release](https://jitpack.io/v/secoo-android/coobox.svg)](https://jitpack.io/#secoo-android/coobox) 
+
+[ReadMe in English](https://github.com/secoo-android/coobox/blob/main/README_en.md) | 
+<a href="https://secoo-android.github.io/coobox/library/" target="_blank">API Reference 文档</a>
 
 
   * Coobox 是一个加速 Android 应用开发编码效率的工具箱
@@ -86,7 +89,7 @@ aView.removeSelf()
 
 完整文档
 =======
-[API 具体文档](https://secoo-android.github.io/coobox/library/)
+<a href="https://secoo-android.github.io/coobox/library/" target="_blank">API Reference 文档</a>
 
 
 License
