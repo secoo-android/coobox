@@ -6,6 +6,7 @@ Coobox
 
 开始使用
 --------------
+1. 在项目根目录下的 `build.gradle` 增加仓库配置 
 ```groovy
 allprojects {
     repositories {
@@ -15,12 +16,14 @@ allprojects {
 }
 ```
 
+2. 在模块下的 `build.gradle` 增加依赖引用 
 ```groovy
 dependencies {
-    implementation 'com.secoo.library:coobox:1.0.1'
+    implementation 'com.github.secoo-android:coobox:x.y.z'
 }
 ```
 
+注: 请手动替换 x.y.z 为最新的版本信息
 
 
 部分示例
