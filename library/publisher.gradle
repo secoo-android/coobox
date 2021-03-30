@@ -1,0 +1,78 @@
+apply plugin: 'maven-publish'
+
+def getVersionInfo() {
+    def versionInfo = new groovy.json.JsonSlurper().parse(new File(projectDir, "dep_version.json"))
+    println versionInfo
+    return versionInfo["coobox"]
+}
+
+
+ext {
+    // 仓库地址
+    repositoryReleaseUrl = "http://10.185.240.240:8081/repository/android/"
+    repositorySnapshotUrl = "http://10.185.240.240:8081/repository/android_snapshot/"
+    // 用户名密码
+    contributorUserName = "contributor_droid"
+    contributorPassword = project.property("maven_password")
+    // 库依赖信息
+    libraryGroupId = "com.secoo.coobox"
+    libraryArtifact = "coobox"
+    libraryVersion = getVersionInfo()
+}
+
+// 生成源码
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+publishing {
+    repositories {
+        // 定义一个 maven 仓库
+        maven {
+            // 可以有且仅有一个仓库不指定 name 属性，会隐式设置为 Maven
+            // 仓库用户名密码
+            credentials {
+                username contributorUserName
+                password contributorPassword
+            }
+            // 根据 libraryVersion 来判断仓库地址
+            url libraryVersion.endsWith("SNAPSHOT") ? repositorySnapshotUrl : repositoryReleaseUrl
+        }
+    }
+
+    publications {
+        // 定义一个名为 AndroidLibrary 的发布
+        AndroidLibrary(MavenPublication) {
+            // 库依赖信息
+            groupId libraryGroupId
+            artifactId libraryArtifact
+            version libraryVersion
+            // 上传aar
+            artifact "$buildDir/outputs/aar/${project.getName()}-release.aar"
+            // 上传source
+            artifact generateSourcesJar
+            // 配置dependencies
+            pom {
+                withXml {
+                    def dependencies = asNode().appendNode("dependencies")
+                    configurations.getByName("releaseCompileClasspath")
+                            .getResolvedConfiguration()
+                            .getFirstLevelModuleDependencies()
+                            .each {
+                                def dependency = dependencies.appendNode("dependency")
+                                dependency.appendNode("groupId", it.moduleGroup)
+                                dependency.appendNode("artifactId", it.moduleName)
+                                dependency.appendNode("version", it.moduleVersion)
+                            }
+                } // withXml
+            } // pom
+        } // AndroidLibrary
+    } // publications
+    // 生成上传aar包
+    model {
+        tasks.publishAndroidLibraryPublicationToMavenRepository {
+            dependsOn project.tasks.assembleRelease
+        }
+    }
+} //publishing
