@@ -57,7 +57,7 @@ android {
     }
 
     dokkaHtml {
-        outputDirectory.set(new File(rootDir, "dokkadocs"))
+        outputDirectory.set(new File(rootDir, "docs"))
         // Set module name displayed in the final output
         moduleName.set("library")
 
