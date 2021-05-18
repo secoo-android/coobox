@@ -1,6 +1,6 @@
 package com.secoo.coobox.library.util.crash
 
-import com.secoo.coobox.library.ktx.kotlin.isNotNull
+import com.secoo.coobox.library.ktx.kotlin.isNull
 
 /**
  * 一个包装了结果和异常的数据类
@@ -9,7 +9,7 @@ data class Result<out R>(val value: R?, val exception: Throwable?) {
     /**
      * 如果没有异常，则认为执行成功。并非代表得到了业务需要的值。
      */
-    fun isSuccessful() = exception.isNotNull()
+    fun isSuccessful() = exception.isNull()
 }
 
 /**
