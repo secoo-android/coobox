@@ -6,3 +6,9 @@ package com.secoo.coobox.library.ktx.java.lang
 fun Int.halfFloat(): Float {
     return this / 2f
 }
+
+/**
+ * 当前Int dp值转换px
+ */
+val Int.toPx
+    get() = this.toFloat().toPx
