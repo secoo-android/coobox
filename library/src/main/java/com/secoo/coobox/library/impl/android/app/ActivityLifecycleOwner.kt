@@ -10,7 +10,7 @@ import androidx.lifecycle.LifecycleRegistry
  * 将Activity（非ComponentActivity）转换，使其获取Lifecycle
  * 利用ActivityLifecycleCallbacks 检测对应的生命周期，来自行实现 Lifecycle
  */
-class ActivityLifecycleOwner(private val targetActivity: Activity) : ActivityLifecycleCallbacksImpl(), LifecycleOwner {
+open class ActivityLifecycleOwner(private val targetActivity: Activity) : ActivityLifecycleCallbacksImpl(), LifecycleOwner {
     private val lifecycleRegistry: LifecycleRegistry by lazy {
         LifecycleRegistry(this)
     }
@@ -46,7 +46,7 @@ class ActivityLifecycleOwner(private val targetActivity: Activity) : ActivityLif
 
     }
 
-    private fun handleLifecycleEvent(activity: Activity, event: Lifecycle.Event) {
+    protected fun handleLifecycleEvent(activity: Activity, event: Lifecycle.Event) {
         if (activity == targetActivity) {
             lifecycleRegistry.handleLifecycleEvent(event)
         }

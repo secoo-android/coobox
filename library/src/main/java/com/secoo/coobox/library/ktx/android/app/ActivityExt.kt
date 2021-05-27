@@ -1,14 +1,19 @@
 package com.secoo.coobox.library.ktx.android.app
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.os.Build
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import com.secoo.coobox.library.alias.type.ActivityToUnit
 import com.secoo.coobox.library.impl.android.app.ActivityLifecycleOwner
+import com.secoo.coobox.library.impl.android.app.ActivityLifecycleOwnerV29
 import com.secoo.coobox.library.ktx.androidx.lifecycle.*
 import com.secoo.coobox.library.ktx.kotlin.asType
 import com.secoo.coobox.library.lifecycle.AppLifecycleManager
+import com.secoo.coobox.library.util.os.isAndroid10OrLater
 
 /**
  * 获取Activity 绑定的 Lifecycle
@@ -16,14 +21,33 @@ import com.secoo.coobox.library.lifecycle.AppLifecycleManager
  *
  */
 private fun Activity.getBoundLifecycle(): Lifecycle {
-    return if (this is ComponentActivity) {
-        this.lifecycle
-    }  else {
-        val lifecycleOwner = ActivityLifecycleOwner(this)
-        AppLifecycleManager.observeActivityCallback(this, lifecycleOwner)
-        lifecycleOwner.lifecycle
+    return when {
+        this is ComponentActivity -> this.lifecycle
+        isAndroid10OrLater() -> getBoundLifecycleV29()
+        else -> getBoundLifecycleFallback()
     }
 }
+
+/**
+ * 获取运行环境在 API Level 29及其以后的 Lifecycle对象
+ */
+@SuppressLint("NewApi")
+@RequiresApi(Build.VERSION_CODES.Q)
+private fun Activity.getBoundLifecycleV29(): Lifecycle {
+    val lifecycleOwner = ActivityLifecycleOwnerV29(this)
+    this.registerActivityLifecycleCallbacks(lifecycleOwner)
+    return lifecycleOwner.lifecycle
+}
+
+/**
+ * 获取兜底的 Lifecycle 实现，某些时机并非严格准确
+ */
+private fun Activity.getBoundLifecycleFallback(): Lifecycle {
+    val lifecycleOwner = ActivityLifecycleOwner(this)
+    AppLifecycleManager.observeActivityCallback(this, lifecycleOwner)
+    return lifecycleOwner.lifecycle
+}
+
 
 /**
  * 在 Activity onStart 时执行一次操作
