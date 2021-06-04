@@ -1,9 +1,6 @@
 package com.secoo.coobox.library.ktx.android.os
 
-import android.os.Build
-import android.os.Bundle
-import android.os.IBinder
-import android.os.Parcelable
+import android.os.*
 import android.util.Size
 import android.util.SizeF
 import java.io.Serializable
@@ -91,4 +88,19 @@ fun  Bundle.plus(key: String?, value: Any?): Bundle {
     return this
 }
 
+
+/**
+ * 获取 Bundle 对象 对应的byte数量，用来确定 Bundle 在序列化中的大小。
+ */
+fun Bundle.byteCount(): Int {
+    val parcel = Parcel.obtain().also {
+        it.writeValue(this)
+    }
+
+    val bytes = parcel.marshall().also {
+        parcel.recycle()
+    }
+
+    return bytes?.size ?: 0
+}
 
